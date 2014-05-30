@@ -154,3 +154,6 @@ nmap <C-j> <C-f>
 nmap <C-k> <C-b>
 nmap <C-h> <C-d>
 nmap <C-l> <C-u>
+
+"<C-a>で増やすとき10進数扱い
+set nrformats=""
