@@ -81,14 +81,18 @@ for n in range(1, 9)
 endfor
 " t1 で1番左のタブ、t2 で1番左から2番目のタブにジャンプ
 
-nnoremap <silent> [Tag]c :tablast <bar> tabnew<CR>
-" tc 新しいタブを一番右に作る
-nnoremap <silent> [Tag]x :tabclose<CR>
+" tc 新しいタブを作る
+nnoremap <silent> [Tag]c :tabnew<SPACE>
 " tx タブを閉じる
-nnoremap <silent> [Tag]n :tabnext<CR>
-" tn 次のタブ
-nnoremap <silent> [Tag]p :tabprevious<CR>
-" tp 前のタブ
+nnoremap <silent> [Tag]x :tabclose<CR>
+" tl 次のタブ
+nnoremap <silent> [Tag]l :tabnext<CR>
+" th 前のタブ
+nnoremap <silent> [Tag]h :tabprevious<CR>
+" tq ウインドウを閉じる
+nnoremap <silent> [Tag]q :q<CR>
+" tw 保存
+nnoremap <silent> [Tag]w :w<CR>
 
 "キーバインド
 "括弧系押されたら自動で真ん中にソート
