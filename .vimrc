@@ -35,6 +35,19 @@ filetype plugin indent on     " Required!
 NeoBundleCheck
 " }}}
 
+"neobundleプラグイン一覧{{{
+NeoBundle 'jpo/vim-railscasts-theme'
+NeoBundle 'mattn/emmet-vim'
+NeoBundle 'hail2u/vim-css3-syntax'
+NeoBundle 'taichouchou2/html5.vim'
+NeoBundle 'yonchu/accelerated-smooth-scroll'
+NeoBundle 'marijnh/tern_for_vim'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'Shougo/neocomplete.vim'
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
+NeoBundle 'majutsushi/tagbar' "}}}
+
 "{{{ NeoCompleteの設定コピペ
 "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
 " Disable AutoComplPop.
@@ -121,26 +134,25 @@ endif
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 "}}} NeoCompleteコピペ終了
 
-" F8でtagbar切り替え
-nmap <F8> :TagbarToggle<CR>
+"{{{ neosnippetの設定コピペ
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
 
-"neobundleプラグイン一覧{{{
-NeoBundle 'jpo/vim-railscasts-theme'
-NeoBundle 'mattn/emmet-vim'
-NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'taichouchou2/html5.vim'
-NeoBundle 'yonchu/accelerated-smooth-scroll'
-NeoBundle 'marijnh/tern_for_vim'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'Shougo/neocomplete.vim'
-NeoBundle 'majutsushi/tagbar'
-"}}}
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif "}}}
 
-"カラースキーム
+"{{{カラースキーム railscasts
 colorscheme railscasts
-set t_Co=256
+set t_Co=256 "}}}
 
-"タブをいい感じにする
+"{{{タブをいい感じにするコピペ
 " Anywhere SID.
 function! s:SID_PREFIX()
   return matchstr(expand('<sfile>'), '<SNR>\d\+_\zeSID_PREFIX$')
@@ -188,9 +200,33 @@ nnoremap <silent> [Tag]h :tabprevious<CR>
 " tq ウインドウを閉じる
 nnoremap <silent> [Tag]q :q<CR>
 " tw 保存
-nnoremap <silent> [Tag]w :w<CR>
+nnoremap <silent> [Tag]w :w<CR> 
+"}}}
 
-"キーバインド
+"{{{ キーバインド
+"コマンドキー入れ替え
+noremap ; :
+noremap : ;
+
+" vimrcを開いたり読んだり
+nnoremap <space>. :tabnew $MYVIMRC <CR>
+nnoremap <leader>. :source $MYVIMRC <CR>
+
+"{{{ emmetの設定
+"ctrl + e で展開
+ let g:user_emmet_expandabbr_key = '<c-e>'
+"html展開した時のlangをjaに
+ let g:user_emmet_settings = { 'lang' : 'ja'} "}}}emmet
+
+" F8でtagbar切り替え
+nmap <F8> :TagbarToggle<CR>
+
+" {{{Neosnipetの設定
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target) 
+"}}} Neosnipetの設定
+
 "括弧系押されたら自動で真ん中にソート
 "inoremap [] []<left>
 "inoremap <> <><left>
@@ -201,28 +237,22 @@ nnoremap <silent> [Tag]w :w<CR>
 "inoremap 「」 「」<left>
 "inoremap </ </><left>
 "inoremap :; :<space>;<left>
-"コマンドキー入れ替え
-noremap ; :
-noremap : ;
+"}}}キーバインド
 
 "新しい行のインデントを現在行と同じにする
 set autoindent
-"タブの代わりに空白文字を挿入する
-"set expandtab
+
 "タブは半角4文字分のスペース
 set ts=2 sw=2 sts=0
+
 "行番号表示
 set number
+
 "編集中のファイル名を表示
 set title
+
 "カラー表示
 syntax on
-
-"emmetの設定
-"ctrl + e で展開
- let g:user_emmet_expandabbr_key = '<c-e>'
-"html展開した時のlangをjaに
- let g:user_emmet_settings = { 'lang' : 'ja'}
 
 "Oで空行挿入
 nnoremap O :<C-u>call append(expand('.'), '')<Cr>j
@@ -230,7 +260,7 @@ nnoremap O :<C-u>call append(expand('.'), '')<Cr>j
 "clipboardにコピー
 set clipboard=unnamed,unnamedplus
 
-"改行コード
+"{{{改行コード
 function! s:set_fileformat()
     if &fileformat != "unix"
 \   && !get(b:, "set_fileformat_checked", 0)
@@ -246,13 +276,14 @@ endfunction
 augroup vimrc_group_set_fileformat
     autocmd!
     autocmd BufWritePre * :call <SID>set_fileformat()
-augroup END
+	augroup END "}}}
 
-"一気にスクロール
+"{{{一気にスクロール
 nmap <C-j> <C-f>
 nmap <C-k> <C-b>
 nmap <C-h> <C-d>
-nmap <C-l> <C-u>
+nmap <C-l> <C-u> 
+"}}}
 
 "<C-a>で増やすとき10進数扱い
 set nrformats=
@@ -260,14 +291,13 @@ set nrformats=
 "改行コメントアウトなし
 autocmd FileType * setlocal formatoptions-=ro
 
-"DiffOrig使用可能にする
+"{{{DiffOrig使用可能にする
 if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
     \ | wincmd p | diffthis
-endif
+endif "}}}
 
-" vimrcを開いたり読んだり
-nnoremap <space>. :tabnew $MYVIMRC <CR>
-nnoremap <leader>. :source $MYVIMRC <CR>
+" swpファイルの場所変更
+set directory=~/tmp
 
 " vim: foldmethod=marker
