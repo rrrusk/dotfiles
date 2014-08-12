@@ -46,6 +46,9 @@ NeoBundle 'tpope/vim-surround'
 NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/neomru.vim'
+NeoBundle 'basyura/unite-rails'
 NeoBundle 'majutsushi/tagbar' "}}}
 
 "{{{ NeoCompleteの設定コピペ
@@ -147,6 +150,16 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 if has('conceal')
   set conceallevel=2 concealcursor=i
 endif "}}}
+
+" unite.vim
+let g:unite_enable_start_insert=1
+let g:unite_source_history_yank_enable =1
+let g:unite_source_file_mru_limit = 200
+nnoremap <silent> <space>uy :<C-u>Unite history/yank<CR>
+nnoremap <silent> <space>um :<C-u>Unite file_mru buffer<CR>
+nnoremap <silent> <space>uu :<C-u>Unite file<CR>
+nnoremap <silent> <space>ur :Unite rails/
+call unite#custom#default_action('file' , 'tabopen') "ファイルは tabopen で開く
 
 "{{{カラースキーム railscasts
 colorscheme railscasts
