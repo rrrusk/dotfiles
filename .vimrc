@@ -47,8 +47,8 @@ NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'basyura/unite-rails'
+NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'majutsushi/tagbar' "}}}
 
 "{{{ NeoCompleteの設定コピペ
@@ -151,15 +151,16 @@ if has('conceal')
   set conceallevel=2 concealcursor=i
 endif "}}}
 
-" unite.vim
-let g:unite_enable_start_insert=1
+"{{{ unite.vim
+let g:unite_enable_start_insert=1 "insertモードでスタート
 let g:unite_source_history_yank_enable =1
 let g:unite_source_file_mru_limit = 200
-nnoremap <silent> <space>uy :<C-u>Unite history/yank<CR>
-nnoremap <silent> <space>um :<C-u>Unite file_mru buffer<CR>
-nnoremap <silent> <space>uu :<C-u>Unite file<CR>
-nnoremap <silent> <space>ur :Unite rails/
+" ESCキーを2回押すと終了する
+au FileType unite nnoremap <silent> <buffer> <ESC><ESC> :q<CR>
+au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>:q<CR>
+
 call unite#custom#default_action('file' , 'tabopen') "ファイルは tabopen で開く
+"}}}
 
 "{{{カラースキーム railscasts
 colorscheme railscasts
@@ -239,6 +240,13 @@ imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target) 
 "}}} Neosnipetの設定
+
+"{{{ uniteの設定
+nnoremap <silent> <space>uy :<C-u>Unite history/yank<CR>
+nnoremap <silent> <space>um :<C-u>Unite file_mru buffer<CR>
+nnoremap <silent> <space>uu :<C-u>Unite file<CR>
+nnoremap <silent> <space>ur :Unite rails/
+"}}}
 
 "括弧系押されたら自動で真ん中にソート
 "inoremap [] []<left>
