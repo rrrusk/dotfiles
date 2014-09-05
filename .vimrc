@@ -1,38 +1,30 @@
 "NeoBundle {{{
-" ----------------------------------------------------------------------------------------
-"   neobundle
-" ----------------------------------------------------------------------------------------
-set nocompatible               " Be iMproved
+ if has('vim_starting')
+   set nocompatible               " Be iMproved
 
-if has('vim_starting')
-set runtimepath+=~/.vim/bundle/neobundle.vim/
-endif
+   " Required:
+   set runtimepath+=~/.vim/bundle/neobundle.vim/
+ endif
 
-call neobundle#rc(expand('~/.vim/bundle/'))
+ " Required:
+ call neobundle#begin(expand('~/.vim/bundle/'))
 
-" Let NeoBundle manage NeoBundle
-NeoBundleFetch 'Shougo/neobundle.vim'
+ " Let NeoBundle manage NeoBundle
+ " Required:
+ NeoBundleFetch 'Shougo/neobundle.vim'
 
-" Recommended to install
-" After install, turn shell ~/.vim/bundle/vimproc, (n,g)make -f your_machines_makefile
-NeoBundle 'Shougo/vimproc', {
-        \ 'build' : {
-                \ 'windows' : 'make -f make_mingw32.mak',
-                \ 'cygwin' : 'make -f make_cygwin.mak',
-                \ 'mac' : 'make -f make_mac.mak',
-                \ 'unix' : 'make -f make_unix.mak',
-        \ },
-\ }
+ " My Bundles here:
+ " Refer to |:NeoBundle-examples|.
+ " Note: You don't set neobundle setting in .gvimrc!
 
-filetype plugin indent on     " Required!
+ call neobundle#end()
 
-" Brief help
-" :NeoBundleList          - list configured bundles
-" :NeoBundleInstall(!)    - install(update) bundles
-" :NeoBundleClean(!)      - confirm(or auto-approve) removal of unused bundles
+ " Required:
+ filetype plugin indent on
 
-" Installation check.
-NeoBundleCheck
+ " If there are uninstalled bundles found on startup,
+ " this will conveniently prompt you to install them.
+ NeoBundleCheck
 " }}}
 
 "neobundleプラグイン一覧{{{
@@ -41,15 +33,18 @@ NeoBundle 'mattn/emmet-vim'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'taichouchou2/html5.vim'
 NeoBundle 'yonchu/accelerated-smooth-scroll'
-NeoBundle 'marijnh/tern_for_vim'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/neosnippet'
-NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'basyura/unite-rails'
 NeoBundle 'Shougo/neomru.vim'
-NeoBundle 'majutsushi/tagbar' "}}}
+NeoBundle 'honza/vim-snippets'
+NeoBundle 'basyura/TweetVim'
+NeoBundle 'basyura/twibill.vim'
+NeoBundle 'tyru/open-browser.vim'
+" NeoBundle 'Shougo/vimshell.vim'
+" NeoBundle 'majutsushi/tagbar' "}}}
 
 "{{{ NeoCompleteの設定コピペ
 "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
@@ -149,7 +144,14 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 " For snippet_complete marker.
 if has('conceal')
   set conceallevel=2 concealcursor=i
-endif "}}}
+endif 
+
+" Enable snipMate compatibility feature.
+let g:neosnippet#enable_snipmate_compatibility = 1
+
+" Tell Neosnippet about the other snippets
+let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
+"}}}
 
 "{{{ unite.vim
 let g:unite_enable_start_insert=1 "insertモードでスタート
@@ -221,6 +223,17 @@ nnoremap <silent> [Tag]w :w<CR>
 "コマンドキー入れ替え
 noremap ; :
 noremap : ;
+
+"見た目上の行移動
+noremap <C-n> gj
+noremap <C-p> gk
+
+"{{{一気にスクロール
+nmap <C-j> <C-f>
+nmap <C-k> <C-b>
+nmap <C-h> <C-d>
+nmap <C-l> <C-u> 
+"}}}
 
 " vimrcを開いたり読んだり
 nnoremap <space>. :tabnew $MYVIMRC <CR>
@@ -299,12 +312,6 @@ augroup vimrc_group_set_fileformat
     autocmd BufWritePre * :call <SID>set_fileformat()
 	augroup END "}}}
 
-"{{{一気にスクロール
-nmap <C-j> <C-f>
-nmap <C-k> <C-b>
-nmap <C-h> <C-d>
-nmap <C-l> <C-u> 
-"}}}
 
 "<C-a>で増やすとき10進数扱い
 set nrformats=
@@ -320,5 +327,8 @@ endif "}}}
 
 " swpファイルの場所変更
 set directory=~/tmp
+
+" ヘルプの言語変更
+set helplang=ja,en
 
 " vim: foldmethod=marker
