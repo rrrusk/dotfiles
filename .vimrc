@@ -29,24 +29,50 @@
 
 "neobundleプラグイン一覧{{{
 NeoBundle 'jpo/vim-railscasts-theme'
-NeoBundle 'mattn/emmet-vim'
-NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'taichouchou2/html5.vim'
 NeoBundle 'yonchu/accelerated-smooth-scroll'
 NeoBundle 'tpope/vim-surround'
-NeoBundle 'Shougo/neocomplete.vim'
-NeoBundle 'Shougo/neosnippet'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'basyura/unite-rails'
-NeoBundle 'Shougo/neomru.vim'
-NeoBundle 'honza/vim-snippets'
-NeoBundle 'basyura/TweetVim'
-NeoBundle 'basyura/twibill.vim'
-NeoBundle 'tyru/open-browser.vim'
-" NeoBundle 'Shougo/vimshell.vim'
+NeoBundle 'Shougo/vimproc.vim', {
+      \ 'build' : {
+      \     'windows' : 'tools\\update-dll-mingw',
+      \     'cygwin' : 'make -f make_cygwin.mak',
+      \     'mac' : 'make -f make_mac.mak',
+      \     'unix' : 'make -f make_unix.mak',
+      \    },
+      \ }
+NeoBundleLazy 'mattn/emmet-vim', {
+			\ 'insert' : 1,
+			\ }
+NeoBundleLazy 'hail2u/vim-css3-syntax'
+NeoBundleLazy 'taichouchou2/html5.vim'
+NeoBundleLazy 'Shougo/neocomplete.vim', {
+			\ 'depends' : ['Shougo/neosnippet'],
+			\ 'insert' : 1,
+			\ }
+NeoBundleLazy 'Shougo/neosnippet', {
+			\ 'depends' : ['honza/vim-snippets'],
+			\ }
+NeoBundleLazy 'Shougo/unite.vim', {
+\ 'commands' : [{ 'name' : 'Unite',
+\ 'complete' : 'customlist,unite#complete_source'},
+\ 'UniteWithCursorWord', 'UniteWithInput']
+\ }
+NeoBundleLazy 'basyura/unite-rails'
+NeoBundleLazy 'Shougo/neomru.vim'
+NeoBundleLazy 'basyura/TweetVim', {
+			\ 'depends' : ['basyura/twibill.vim', 'tyru/open-browser.vim'],
+			\ 'commands' : 'TweetVimHomeTimeline',
+			\ }
+NeoBundle 'saihoooooooo/glowshi-ft.vim'
+NeoBundleLazy 'mattn/vim-metarw-gdrive',{
+			\ 'depends' : ['mattn/webapi-vim', 'kana/vim-metarw'],
+			\ 'commands' : 'e gdrive:',
+			\ }
+NeoBundleLazy 'Shougo/vimshell.vim',{
+			\ 'commands' : 'VimShell',
+			\ }
 " NeoBundle 'majutsushi/tagbar' "}}}
 
-"{{{ NeoCompleteの設定コピペ
+if neobundle#tap('neocomplete.vim') "{{{ NeoCompleteの設定コピペ
 "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
@@ -130,9 +156,9 @@ endif
 " For perlomni.vim setting.
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-"}}} NeoCompleteコピペ終了
+endif "}}} NeoCompleteコピペ終了
 
-"{{{ neosnippetの設定コピペ
+if neobundle#tap('neosnippet.vim') "{{{ neosnippetの設定コピペ
 " SuperTab like snippets behavior.
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)"
@@ -151,9 +177,16 @@ let g:neosnippet#enable_snipmate_compatibility = 1
 
 " Tell Neosnippet about the other snippets
 let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
-"}}}
 
-"{{{ unite.vim
+" {{{Neosnipetの設定
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target) 
+"}}} Neosnipetの設定
+
+endif "}}}
+
+if neobundle#tap('unite.vim') "{{{ unite.vim
 let g:unite_enable_start_insert=1 "insertモードでスタート
 let g:unite_source_history_yank_enable =1
 let g:unite_source_file_mru_limit = 200
@@ -162,7 +195,7 @@ au FileType unite nnoremap <silent> <buffer> <ESC><ESC> :q<CR>
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>:q<CR>
 
 call unite#custom#default_action('file' , 'tabopen') "ファイルは tabopen で開く
-"}}}
+endif "}}}
 
 "{{{カラースキーム railscasts
 colorscheme railscasts
@@ -229,48 +262,30 @@ noremap <C-n> gj
 noremap <C-p> gk
 
 "{{{一気にスクロール
-nmap <C-j> <C-f>
-nmap <C-k> <C-b>
-nmap <C-h> <C-d>
-nmap <C-l> <C-u> 
+map <C-j> <C-f>
+map <C-k> <C-b>
+map <C-h> <C-d>
+map <C-l> <C-u> 
 "}}}
 
 " vimrcを開いたり読んだり
 nnoremap <space>. :tabnew $MYVIMRC <CR>
 nnoremap <leader>. :source $MYVIMRC <CR>
 
-"{{{ emmetの設定
+if neobundle#tap('emmet-vim') "{{{ emmetの設定
 "ctrl + e で展開
  let g:user_emmet_expandabbr_key = '<c-e>'
 "html展開した時のlangをjaに
- let g:user_emmet_settings = { 'lang' : 'ja'} "}}}emmet
+ let g:user_emmet_settings = { 'lang' : 'ja'} 
+endif "}}}emmet
 
-" F8でtagbar切り替え
-nmap <F8> :TagbarToggle<CR>
-
-" {{{Neosnipetの設定
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target) 
-"}}} Neosnipetの設定
-
-"{{{ uniteの設定
+if neobundle#tap('unite.vim') "{{{ uniteの設定
 nnoremap <silent> <space>uy :<C-u>Unite history/yank<CR>
 nnoremap <silent> <space>um :<C-u>Unite file_mru buffer<CR>
 nnoremap <silent> <space>uu :<C-u>Unite file<CR>
 nnoremap <silent> <space>ur :Unite rails/
+endif
 "}}}
-
-"括弧系押されたら自動で真ん中にソート
-"inoremap [] []<left>
-"inoremap <> <><left>
-"inoremap () ()<left>
-"inoremap {} {}<left>
-"inoremap "" ""<left>
-"inoremap '' ''<left>
-"inoremap 「」 「」<left>
-"inoremap </ </><left>
-"inoremap :; :<space>;<left>
 "}}}キーバインド
 
 "新しい行のインデントを現在行と同じにする
@@ -293,6 +308,10 @@ nnoremap O :<C-u>call append(expand('.'), '')<Cr>j
 
 "clipboardにコピー
 set clipboard=unnamed,unnamedplus
+
+"<space> y,pで別のバッファから
+nnoremap <space>y "ay
+nnoremap <space>p "ap
 
 "{{{改行コード
 function! s:set_fileformat()
@@ -331,4 +350,5 @@ set directory=~/tmp
 " ヘルプの言語変更
 set helplang=ja,en
 
+nnoremap <space>e :call Exe()<CR>
 " vim: foldmethod=marker
